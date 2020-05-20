@@ -1,7 +1,6 @@
 import 'package:chatout/core/constants/app_constants.dart';
 import 'package:chatout/provider_setup.dart';
 import 'package:chatout/ui/router.dart';
-import 'package:chatout/ui/views/login_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,7 +13,8 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
-        title: 'Flutter Demo',
+        title: 'Chatout',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

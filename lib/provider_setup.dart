@@ -1,3 +1,4 @@
+import 'package:chatout/core/services/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 
@@ -8,6 +9,8 @@ List<SingleChildWidget> providers = [
   ...dependentServices,
   ...uiConsumableProviders
 ];
-List<SingleChildWidget> independentServices = [Provider.value(value: Api())];
+List<SingleChildWidget> independentServices = [
+  Provider.value(value: FireAuth())
+];
 List<SingleChildWidget> dependentServices = [];
 List<SingleChildWidget> uiConsumableProviders = [];
