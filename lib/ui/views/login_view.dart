@@ -1,4 +1,8 @@
+import 'package:chatout/core/view_models/views/login_view_model.dart';
+import 'package:chatout/ui/views/base_widget.dart';
+import 'package:chatout/ui/widgets/login_form.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -7,59 +11,86 @@ class LoginView extends StatefulWidget {
 
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
+  var _loginSuccess = 'hiii';
+
   @override
   Widget build(BuildContext context) {
+    //print('baseWidget:::::::::::: built');
+//    return BaseWidget(
+//      // no need to explicitly specify type of provider as Dart
+//      // is intelligent enough for automatic type inference.
+//      model: LoginViewModel(auth: Provider.of(context)),
+//      builder: (context, model, _) =>
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          SizedBox(height: 30.0),
-          Text('Login'),
-          SizedBox(height: 30.0),
-          Form(
-            key: _formKey,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 25.0, vertical: 50.0),
             child: Column(
+              mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                TextFormField(
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some text';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Email',
-                  ),
-                ),
-                TextFormField(
-                  obscureText: true,
-                  validator: (value) {
-                    if (value.isEmpty) {
-                      return 'Please enter some pass';
-                    }
-                    return null;
-                  },
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                  ),
-                ),
-                RaisedButton(
-                  onPressed: () {
-                    // Validate returns true if the form is valid, otherwise false.
-                    if (_formKey.currentState.validate()) {
-                      // If the form is valid, display a snackbar. In the real world,
-                      // you'd often call a server or save the information in a database.
-
-                      Scaffold.of(context).showSnackBar(
-                          SnackBar(content: Text('Processing Data')));
-                    }
-                  },
-                  child: Text('Submit'),
-                ),
+                buildLoginHeader(),
+                SizedBox(height: 30.0),
+                LoginForm(),
+                SizedBox(height: 20.0),
+                buildVerticalDivider(),
+                SizedBox(height: 20.0),
+                buildCreateAccountButton(),
               ],
             ),
           ),
-        ],
+        ),
       ),
+    );
+    //);
+  }
+
+  Widget buildLoginHeader() {
+    return Card(
+      elevation: 5.0,
+      color: Theme.of(context).primaryColor,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 30.0),
+        child: Text(
+          'Sign in',
+          style: TextStyle(
+              fontSize: 60.0, fontFamily: 'Pacifico', color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  ///////////////////////////////////////////////////////////////////////
+
+  Widget buildVerticalDivider() {
+    return Row(children: <Widget>[
+      Expanded(child: Divider()),
+      Text("      or      "),
+      Expanded(child: Divider()),
+    ]);
+  }
+
+  ////////////////////////////////////////////////////////////////////////
+
+  Widget buildCreateAccountButton() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: FlatButton(
+            //color: Theme.of(context).accentColor,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5.0)),
+            onPressed: () {},
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.0),
+              child: Text(
+                'Create Account',
+                style: TextStyle(fontSize: 18.0),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
