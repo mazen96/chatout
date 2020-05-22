@@ -38,28 +38,14 @@ class StartUpView extends StatelessWidget {
               color: Theme.of(context).primaryColor,
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 30.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Center(
-                      child: Text(
-                        'Chatout',
-                        style: TextStyle(
-                            fontSize: 60.0,
-                            fontFamily: 'Pacifico',
-                            color: Colors.white),
-                      ),
-                    ),
-                    Center(
-                      child: Text(
-                        'Application',
-                        style: TextStyle(
-                            fontSize: 60.0,
-                            fontFamily: 'Pacifico',
-                            color: Colors.white),
-                      ),
-                    ),
-                  ],
+                child: Center(
+                  child: Text(
+                    'Chatout',
+                    style: TextStyle(
+                        fontSize: 60.0,
+                        fontFamily: 'Pacifico',
+                        color: Colors.white),
+                  ),
                 ),
               ),
             ),
