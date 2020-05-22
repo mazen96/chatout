@@ -4,6 +4,8 @@ import 'package:chatout/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'core/services/navigation_service.dart';
+
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -13,14 +15,14 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: providers,
       child: MaterialApp(
-        title: 'Chatout',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        initialRoute: RoutePaths.SignIn,
-        onGenerateRoute: Router.generateRoute,
-      ),
+          title: 'Chatout',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+          ),
+          initialRoute: RoutePaths.StartUp,
+          onGenerateRoute: Router.generateRoute,
+          navigatorKey: NavigationService.navigatorKey),
     );
   }
 }
