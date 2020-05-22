@@ -2,11 +2,14 @@ import 'package:chatout/core/constants/app_constants.dart';
 import 'package:chatout/ui/views/sign_in_view.dart';
 import 'package:chatout/ui/views/home_view.dart';
 import 'package:chatout/ui/views/sign_up_view.dart';
+import 'package:chatout/ui/views/startup_view.dart';
 import 'package:flutter/material.dart';
 
 class Router {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
+      case RoutePaths.StartUp:
+        return MaterialPageRoute(builder: (_) => StartUpView());
       case RoutePaths.SignIn:
         return MaterialPageRoute(builder: (_) => SignInView());
       case RoutePaths.SignUp:

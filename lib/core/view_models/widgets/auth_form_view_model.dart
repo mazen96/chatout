@@ -3,7 +3,7 @@ import 'package:chatout/core/view_models/base_view_model.dart';
 import 'package:flutter/material.dart';
 
 class AuthFormViewModel extends BaseViewModel {
-  FireAuth _auth;
+  final FireAuth _auth;
   AuthFormViewModel({@required FireAuth auth}) : _auth = auth;
 
   Future<dynamic> signIn({String userEmail, String userPassword}) async {

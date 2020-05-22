@@ -46,6 +46,13 @@ class FireAuth implements BaseAuth {
   }
 
   /////////////////////////////////////////////////////
+  Future<bool> isUserLoggedIn() async {
+    //TODO:: error prone handle exceptions
+    FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    return currentUser != null;
+  }
+
+  /////////////////////////////////////////////////////
   String handleAuthException(dynamic error) {
     switch (error.code) {
       case "ERROR_INVALID_EMAIL":
