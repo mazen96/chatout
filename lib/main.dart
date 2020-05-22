@@ -1,6 +1,6 @@
 import 'package:chatout/core/constants/app_constants.dart';
 import 'package:chatout/provider_setup.dart';
-import 'package:chatout/ui/router.dart';
+import 'package:chatout/router.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        initialRoute: RoutePaths.Login,
+        initialRoute: RoutePaths.SignIn,
         onGenerateRoute: Router.generateRoute,
       ),
     );

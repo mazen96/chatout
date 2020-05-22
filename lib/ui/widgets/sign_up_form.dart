@@ -1,9 +1,11 @@
-import 'package:chatout/core/view_models/views/login_view_model.dart';
-import 'package:chatout/ui/views/base_widget.dart';
+import 'package:chatout/core/constants/app_constants.dart';
+import 'package:chatout/core/view_models/widgets/auth_form_view_model.dart';
+import 'package:chatout/ui/widgets/base_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
-class LoginForm extends StatelessWidget {
+class SignUpForm extends StatelessWidget {
   ///////////////////////////////////////////////////////////////////////
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _eController = TextEditingController();
@@ -12,9 +14,8 @@ class LoginForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('&&&&&&&&&&&&&&&&&&&&&&& stateless rebuilt &&&&&&&&&&&&&&&&&&&');
     return BaseWidget(
-      model: LoginViewModel(auth: Provider.of(context)),
+      model: AuthFormViewModel(auth: Provider.of(context)),
       builder: (context, model, _) => Form(
         key: _formKey,
         child: Column(
@@ -22,16 +23,17 @@ class LoginForm extends StatelessWidget {
             buildEmailTextField(),
             SizedBox(height: 10.0),
             buildPasswordTextField(),
-            SizedBox(height: 20.0),
+            SizedBox(height: 40.0),
             model.busy
                 ? CircularProgressIndicator()
-                : buildSignInButton(context, model)
+                : buildSignUpButton(context, model),
           ],
         ),
       ),
     );
   }
 
+  ////////////////////////////////////////////////////////////////////////////
   Widget buildEmailTextField() {
     return TextFormField(
       controller: _eController,
@@ -71,7 +73,7 @@ class LoginForm extends StatelessWidget {
   }
 
   ///////////////////////////////////////////////////////////////////////
-  Widget buildSignInButton(BuildContext context, dynamic model) {
+  Widget buildSignUpButton(BuildContext context, dynamic model) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -83,22 +85,35 @@ class LoginForm extends StatelessWidget {
             onPressed: () async {
               // Validate returns true if the form is valid, otherwise false.
               if (_formKey.currentState.validate()) {
-                String userEmail = _eController.text;
-                String userPassword = _pController.text;
+                String userEmail = _eController.text.trim();
+                String userPassword = _pController.text.trim();
                 _eController.clear();
                 _pController.clear();
                 FocusScope.of(context).unfocus();
-                var result = await model.login(
+                ///////////////////////////////////////////
+                var result = await model.signUp(
                     userEmail: userEmail, userPassword: userPassword);
+
                 if (result is! String) {
-                  print('%%%%%%%%%::   ${result.message}  ::%%%%%%%%%%');
+                  // if result is not String (error) show Alert.
+                  Alert(
+                          context: context,
+                          type: AlertType.error,
+                          title: 'ERROR',
+                          desc: '${result.message}')
+                      .show();
+                } else {
+                  //operation is successful
+                  Navigator.pushReplacementNamed(context, RoutePaths.Home);
+                  //both signUp and signIn navigates to home as FireBase
+                  // SignUp automatically logs in the user.
                 }
               }
             },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
-                'Sign in',
+                'Sign up',
                 style: TextStyle(fontSize: 18.0, color: Colors.white),
               ),
             ),
@@ -107,6 +122,6 @@ class LoginForm extends StatelessWidget {
       ],
     );
   }
-  ////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////
 
 }

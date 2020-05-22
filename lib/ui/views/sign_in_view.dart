@@ -1,26 +1,15 @@
-import 'package:chatout/core/view_models/views/login_view_model.dart';
-import 'package:chatout/ui/views/base_widget.dart';
-import 'package:chatout/ui/widgets/login_form.dart';
+import 'package:chatout/core/constants/app_constants.dart';
+import 'package:chatout/ui/widgets/sign_in_form.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-class LoginView extends StatefulWidget {
+class SignInView extends StatefulWidget {
   @override
-  _LoginViewState createState() => _LoginViewState();
+  _SignInViewState createState() => _SignInViewState();
 }
 
-class _LoginViewState extends State<LoginView> {
-  final _formKey = GlobalKey<FormState>();
-  var _loginSuccess = 'hiii';
-
+class _SignInViewState extends State<SignInView> {
   @override
   Widget build(BuildContext context) {
-    //print('baseWidget:::::::::::: built');
-//    return BaseWidget(
-//      // no need to explicitly specify type of provider as Dart
-//      // is intelligent enough for automatic type inference.
-//      model: LoginViewModel(auth: Provider.of(context)),
-//      builder: (context, model, _) =>
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -29,13 +18,13 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                buildLoginHeader(),
+                buildHeader(context),
                 SizedBox(height: 30.0),
-                LoginForm(),
+                SignInForm(),
                 SizedBox(height: 20.0),
                 buildVerticalDivider(),
                 SizedBox(height: 20.0),
-                buildCreateAccountButton(),
+                buildCreateAccountButton(context),
               ],
             ),
           ),
@@ -45,18 +34,28 @@ class _LoginViewState extends State<LoginView> {
     //);
   }
 
-  Widget buildLoginHeader() {
-    return Card(
-      elevation: 5.0,
-      color: Theme.of(context).primaryColor,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 30.0),
-        child: Text(
-          'Sign in',
-          style: TextStyle(
-              fontSize: 60.0, fontFamily: 'Pacifico', color: Colors.white),
+  Widget buildHeader(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: Card(
+            elevation: 5.0,
+            color: Theme.of(context).primaryColor,
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 30.0),
+              child: Center(
+                child: Text(
+                  'Welcome',
+                  style: TextStyle(
+                      fontSize: 60.0,
+                      fontFamily: 'Pacifico',
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -72,7 +71,7 @@ class _LoginViewState extends State<LoginView> {
 
   ////////////////////////////////////////////////////////////////////////
 
-  Widget buildCreateAccountButton() {
+  Widget buildCreateAccountButton(BuildContext context) {
     return Row(
       children: <Widget>[
         Expanded(
@@ -80,7 +79,9 @@ class _LoginViewState extends State<LoginView> {
             //color: Theme.of(context).accentColor,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0)),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacementNamed(context, RoutePaths.SignUp);
+            },
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 10.0),
               child: Text(
