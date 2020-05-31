@@ -8,6 +8,7 @@ import 'package:rflutter_alert/rflutter_alert.dart';
 class SignUpForm extends StatelessWidget {
   ///////////////////////////////////////////////////////////////////////
   final _formKey = GlobalKey<FormState>();
+  final TextEditingController _uController = TextEditingController();
   final TextEditingController _eController = TextEditingController();
   final TextEditingController _pController = TextEditingController();
   ///////////////////////////////////////////////////////////////////////
@@ -20,6 +21,8 @@ class SignUpForm extends StatelessWidget {
         key: _formKey,
         child: Column(
           children: <Widget>[
+            buildUsernameTextField(),
+            SizedBox(height: 10.0),
             buildEmailTextField(),
             SizedBox(height: 10.0),
             buildPasswordTextField(),
@@ -32,6 +35,24 @@ class SignUpForm extends StatelessWidget {
       ),
     );
   }
+
+  ////////////////////////////////////////////////////////////////////////////
+  Widget buildUsernameTextField() {
+    return TextFormField(
+      controller: _uController,
+      validator: (value) {
+        if (value.isEmpty) {
+          return 'Please enter your username.';
+        }
+        return null; // case :: Valid user input
+      },
+      decoration: InputDecoration(
+        labelText: 'Username',
+      ),
+    );
+  }
+
+  ///////////////////////////////////////////////////////////////////////
 
   ////////////////////////////////////////////////////////////////////////////
   Widget buildEmailTextField() {
@@ -85,14 +106,18 @@ class SignUpForm extends StatelessWidget {
             onPressed: () async {
               // Validate returns true if the form is valid, otherwise false.
               if (_formKey.currentState.validate()) {
+                String username = _uController.text.trim();
                 String userEmail = _eController.text.trim();
                 String userPassword = _pController.text.trim();
+                _uController.clear();
                 _eController.clear();
                 _pController.clear();
                 FocusScope.of(context).unfocus();
                 ///////////////////////////////////////////
                 var result = await model.signUp(
-                    userEmail: userEmail, userPassword: userPassword);
+                    userName: username,
+                    userEmail: userEmail,
+                    userPassword: userPassword);
 
                 if (result is! String) {
                   // if result is not String (error) show Alert.

@@ -13,7 +13,7 @@ class StartUpViewModel extends BaseViewModel {
 
   Future decideStartUpScreen() async {
     bool userFound = await _auth.isUserLoggedIn();
-    await new Future.delayed(Duration(seconds: 5));
+    await new Future.delayed(Duration(seconds: 2));
     if (userFound) {
       _navigationService.pushReplacementNamed(RoutePaths.Home);
     } else {

@@ -22,12 +22,16 @@ class AuthFormViewModel extends BaseViewModel {
 
   ///////////////////////////////////////////////////////////////////////////
 
-  Future<dynamic> signUp({String userEmail, String userPassword}) async {
+  Future<dynamic> signUp(
+      {@required String userName,
+      @required String userEmail,
+      @required String userPassword}) async {
     var result;
     setBusy(true);
 
     try {
-      result = await _auth.signUp(uEmail: userEmail, uPassword: userPassword);
+      result = await _auth.signUp(
+          username: userName, uEmail: userEmail, uPassword: userPassword);
     } catch (error) {
       result = error;
     }

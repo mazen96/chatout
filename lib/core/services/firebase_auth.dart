@@ -1,8 +1,22 @@
+import 'package:chatout/core/models/friend.dart';
+import 'package:chatout/core/models/user.dart';
 import 'package:chatout/core/services/base_auth.dart';
+import 'package:chatout/core/services/firestore_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class FireAuth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FirestoreService _firestoreService;
+  User _currentUser;
+
+  FireAuth({FirestoreService firestoreService})
+      : _firestoreService = firestoreService;
+
+  User get currentUser => _currentUser;
+
+  Future _populateCurrentUser(String userId) async {
+    _currentUser = await _firestoreService.getUserById(userId);
+  }
 
   @override
   Future<String> signIn({String uEmail, String uPassword}) async {
@@ -12,6 +26,7 @@ class FireAuth implements BaseAuth {
       AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
           email: uEmail, password: uPassword);
       user = result.user;
+      await _populateCurrentUser(user.uid);
     } catch (error) {
       errorMessage = handleAuthException(error);
     }
@@ -26,13 +41,23 @@ class FireAuth implements BaseAuth {
   /////////////////////////////////////////////////////
 
   @override
-  Future<String> signUp({String uEmail, String uPassword}) async {
-    FirebaseUser user;
+  Future<String> signUp(
+      {String username, String uEmail, String uPassword}) async {
+    FirebaseUser fireUser;
     String errorMessage;
     try {
       AuthResult result = await _firebaseAuth.createUserWithEmailAndPassword(
           email: uEmail, password: uPassword);
-      user = result.user;
+
+      fireUser = result.user;
+      List<Friend> friendsList = [];
+      _currentUser = User(
+          id: fireUser.uid,
+          username: username,
+          email: uEmail,
+          friends: friendsList);
+
+      await _firestoreService.createUser(_currentUser);
     } catch (error) {
       errorMessage = handleAuthException(error);
     }
@@ -42,14 +67,32 @@ class FireAuth implements BaseAuth {
       throw Exception(errorMessage);
     }
 
-    return user.uid;
+    return fireUser.uid;
   }
 
   /////////////////////////////////////////////////////
   Future<bool> isUserLoggedIn() async {
     //TODO:: error prone handle exceptions
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
+    // we use __populateCurrentUser function here as in startup view
+    // neither signIn nor signUp functions are called if there is a previous
+    // user session ,therefore we need to update _currentUser property here
+    // as isUserLoggedIn function us called inside the startUpViewModel
+    if (currentUser != null) {
+      await _populateCurrentUser(currentUser.uid);
+    }
+
     return currentUser != null;
+  }
+
+  /////////////////////////////////////////////////////
+  @override
+  Future signOut() async {
+    try {
+      await _firebaseAuth.signOut();
+    } catch (error) {
+      return error.message;
+    }
   }
 
   /////////////////////////////////////////////////////
