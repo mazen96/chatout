@@ -7,17 +7,19 @@ class AuthFormViewModel extends BaseViewModel {
   AuthFormViewModel({@required FireAuth auth}) : _auth = auth;
 
   Future<dynamic> signIn({String userEmail, String userPassword}) async {
-    var result;
+    String errorMessage;
     setBusy(true);
 
     try {
-      result = await _auth.signIn(uEmail: userEmail, uPassword: userPassword);
+      await _auth.signIn(uEmail: userEmail, uPassword: userPassword);
     } catch (error) {
-      result = error;
+      errorMessage = error.message;
     }
-
     setBusy(false);
-    return result;
+    if (errorMessage != null)
+      return errorMessage;
+    else
+      return true;
   }
 
   ///////////////////////////////////////////////////////////////////////////

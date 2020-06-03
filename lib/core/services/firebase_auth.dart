@@ -19,25 +19,21 @@ class FireAuth implements BaseAuth {
   }
 
   @override
-  Future<String> signIn({String uEmail, String uPassword}) async {
+  Future<void> signIn({String uEmail, String uPassword}) async {
     FirebaseUser user;
     String errorMessage;
     try {
       AuthResult result = await _firebaseAuth.signInWithEmailAndPassword(
           email: uEmail, password: uPassword);
       user = result.user;
-      await _populateCurrentUser(user.uid);
     } catch (error) {
       errorMessage = handleAuthException(error);
+      throw Exception(errorMessage); // code returns here with exception.
     }
 
-    if (errorMessage != null) {
-      //return Exception(errorMessage);
-      throw Exception(errorMessage);
-    }
-
-    return user.uid;
-  }
+    //TODO:: handle exception handling for the following function call
+    await _populateCurrentUser(user.uid);
+  } // end of signIn function
   /////////////////////////////////////////////////////
 
   @override

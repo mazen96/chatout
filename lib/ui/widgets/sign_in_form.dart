@@ -94,13 +94,13 @@ class SignInForm extends StatelessWidget {
                 var result = await model.signIn(
                     userEmail: userEmail, userPassword: userPassword);
 
-                if (result is! String) {
-                  // if result is not String (error) show Alert.
+                if (result is String) {
+                  // if result is String (errorMessage) show Alert.
                   Alert(
                           context: context,
                           type: AlertType.error,
                           title: 'ERROR',
-                          desc: '${result.message}')
+                          desc: '$result')
                       .show();
                 } else {
                   //operation is successful (signIn or signUp)
