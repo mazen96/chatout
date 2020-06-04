@@ -1,14 +1,14 @@
-import 'package:chatout/core/models/friend.dart';
+import 'package:chatout/core/models/user_conversations.dart';
 import 'package:chatout/core/models/user.dart';
 import 'package:chatout/core/services/firebase_auth.dart';
 import 'package:chatout/core/services/firestore_service.dart';
 import 'package:chatout/core/view_models/base_view_model.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class AddFriendViewModel extends BaseViewModel {
+class AddConversationViewModel extends BaseViewModel {
   final FireAuth _fireAuth;
   final FirestoreService _firestoreService;
-  AddFriendViewModel(
+  AddConversationViewModel(
       {@required FireAuth fireAuth,
       @required FirestoreService firestoreService})
       : _firestoreService = firestoreService,
@@ -16,32 +16,28 @@ class AddFriendViewModel extends BaseViewModel {
 
   User get currentUser => _fireAuth.currentUser;
 
-  Future addFriend({@required String friendEmail}) async {
+  Future<bool> addConversation({@required String friendEmail}) async {
     ////////////////////////////////////////
     setBusy(true);
-    print('case01');
     bool isUserEmailFound =
         await _firestoreService.isUserEmailFound(email: friendEmail);
-    print('case02');
     if (isUserEmailFound == false) {
-      print('case1');
       throw (Exception("User Not Found"));
-    } else if (friendAlreadyExists(friendEmail)) {
-      print('case2');
-      throw (Exception("User already found in your friends"));
+    } else if (conversationAlreadyExists(friendEmail)) {
+      throw (Exception("User already found in your chats"));
     } else {
-      // email found in users DB and user has no friends with the provided email
-      print('case3');
-      await _firestoreService.addFriend(
+      // email found in users DB and user has no chats with the provided email
+      await _firestoreService.addConversation(
           currUserId: currentUser.id, friendEmail: friendEmail);
     }
     setBusy(false);
+    return true;
   }
 
-  bool friendAlreadyExists(String friendEmail) {
-    List<Friend> userFriendsList = currentUser.friends;
-    if (userFriendsList.isNotEmpty) {
-      int result = userFriendsList.indexWhere((friend) {
+  bool conversationAlreadyExists(String friendEmail) {
+    List<UserConversation> userConversationsList = currentUser.conversations;
+    if (userConversationsList.isNotEmpty) {
+      int result = userConversationsList.indexWhere((friend) {
         return friend.email == friendEmail;
       });
       return result == -1 ? false : true;

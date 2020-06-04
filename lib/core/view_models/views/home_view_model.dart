@@ -1,4 +1,4 @@
-import 'package:chatout/core/models/friend.dart';
+import 'package:chatout/core/models/user_conversations.dart';
 import 'package:chatout/core/models/user.dart';
 import 'package:chatout/core/services/firebase_auth.dart';
 import 'package:chatout/core/services/firestore_service.dart';
@@ -14,15 +14,20 @@ class HomeViewModel extends BaseViewModel {
         _firestoreService = firestore;
 
   User get currentUser => _fireAuth.currentUser;
-  List<Friend> myFriends = List<Friend>();
 
-  Future getMyFriends() async {
+  List<UserConversation> myConversations;
+
+  Future getMyConversations() async {
     String myId = currentUser.id;
+    print('%%%%%%%%%%%% Inside getMyConversations function %%%%%%%%%%');
     try {
-      myFriends = await _firestoreService.getUserFriends(myId);
+      myConversations = await _firestoreService.getUserConversations(myId);
+      notifyListeners(); /////////////////// v.i.i
+      print(
+          '%%%%%%%%%%%% myConversations len :: ${myConversations.length} %%%%%%%%%%');
     } catch (error) {
       print(error.toString());
-      return error;
+      return error.toString();
     }
   }
 
@@ -30,7 +35,8 @@ class HomeViewModel extends BaseViewModel {
     try {
       await _fireAuth.signOut();
     } catch (error) {
-      return error.message;
+      print(error.toString());
+      return error.toString();
     }
   }
 }

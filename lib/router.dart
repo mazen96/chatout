@@ -1,5 +1,5 @@
 import 'package:chatout/core/constants/app_constants.dart';
-import 'package:chatout/ui/views/add_friend_view.dart';
+import 'package:chatout/ui/views/add_conversation_view.dart';
 import 'package:chatout/ui/views/sign_in_view.dart';
 import 'package:chatout/ui/views/home_view.dart';
 import 'package:chatout/ui/views/sign_up_view.dart';
@@ -17,8 +17,8 @@ class Router {
         return MaterialPageRoute(builder: (_) => SignUpView());
       case RoutePaths.Home:
         return MaterialPageRoute(builder: (_) => HomeView());
-      case RoutePaths.AddFriend:
-        return MaterialPageRoute(builder: (_) => AddFriendView());
+      case RoutePaths.AddConversation:
+        return MaterialPageRoute(builder: (_) => AddConversationView());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

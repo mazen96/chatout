@@ -4,7 +4,7 @@
 
 import 'dart:convert';
 
-import 'friend.dart';
+import 'user_conversations.dart';
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 
@@ -14,27 +14,28 @@ class User {
   String id;
   String username;
   String email;
-  List<Friend> friends;
+  List<UserConversation> conversations;
 
   User({
     this.id,
     this.username,
     this.email,
-    this.friends,
+    this.conversations,
   });
 
   factory User.fromJson(Map<String, dynamic> json) => User(
         id: json["id"],
         username: json["username"],
         email: json["email"],
-        friends:
-            List<Friend>.from(json["friends"].map((x) => Friend.fromJson(x))),
+        conversations: List<UserConversation>.from(
+            json["conversations"].map((x) => UserConversation.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "username": username,
         "email": email,
-        "friends": List<dynamic>.from(friends.map((x) => x.toJson())),
+        "conversations":
+            List<dynamic>.from(conversations.map((x) => x.toJson())),
       };
 }

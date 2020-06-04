@@ -1,4 +1,4 @@
-import 'package:chatout/core/models/friend.dart';
+import 'package:chatout/core/models/user_conversations.dart';
 import 'package:chatout/core/models/user.dart';
 import 'package:chatout/core/services/base_auth.dart';
 import 'package:chatout/core/services/firestore_service.dart';
@@ -46,12 +46,12 @@ class FireAuth implements BaseAuth {
           email: uEmail, password: uPassword);
 
       fireUser = result.user;
-      List<Friend> friendsList = [];
+      List<UserConversation> conversationsList = [];
       _currentUser = User(
           id: fireUser.uid,
           username: username,
           email: uEmail,
-          friends: friendsList);
+          conversations: conversationsList);
 
       await _firestoreService.createUser(_currentUser);
     } catch (error) {

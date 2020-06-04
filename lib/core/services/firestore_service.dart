@@ -1,4 +1,5 @@
-import 'package:chatout/core/models/friend.dart';
+import 'package:chatout/core/models/conversation.dart';
+import 'package:chatout/core/models/user_conversations.dart';
 import 'package:chatout/core/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
@@ -6,6 +7,9 @@ import 'package:flutter/cupertino.dart';
 class FirestoreService {
   final CollectionReference _usersCollectionReference =
       Firestore.instance.collection('users');
+
+  final CollectionReference _conversationsCollectionReference =
+      Firestore.instance.collection('conversations');
 
   Future createUser(User user) async {
     // try-catch block is not present here as error handling
@@ -18,7 +22,8 @@ class FirestoreService {
       var userData = await _usersCollectionReference.document(id).get();
       return User.fromJson(userData.data);
     } catch (error) {
-      return error.message;
+      print(error.toString());
+      return error.toString();
     }
   }
 
@@ -34,30 +39,50 @@ class FirestoreService {
     return tmpUser;
   }
 
-  Future getUserFriends(String id) async {
+  Future getUserConversations(String id) async {
     User user;
     try {
       user = await getUserById(id);
     } catch (error) {
       print(error.toString());
-      return error;
+      return error.toString();
     }
-    return user.friends;
+    return user.conversations;
   }
 
-  Future addFriend(
+  Future addConversation(
       {@required String currUserId, @required String friendEmail}) async {
+    // get current user data and the friend user data
     User friend = await getUserByEmail(friendEmail);
     User currentUser = await getUserById(currUserId);
-    Friend newFriendData =
-        Friend(id: friend.id, email: friend.email, username: friend.username);
-    currentUser.friends.add(newFriendData);
+
+    // create new conversation data model and get its generated id
+    Conversation newConversation =
+        Conversation(userIds: [currUserId, friend.id], messages: []);
+    DocumentReference ref =
+        await _conversationsCollectionReference.add(newConversation.toJson());
+    String conversationId = ref.documentID;
+
+    // update conversations field inside currUser data
+    UserConversation myConversationData = UserConversation(
+        id: conversationId, email: friend.email, username: friend.username);
+    currentUser.conversations.add(myConversationData);
 
     await _usersCollectionReference.document(currUserId).updateData({
-      "friends": List<dynamic>.from(currentUser.friends.map((x) => x.toJson()))
-    }).catchError((error) {
-      print('hiiiiiiiiii :: ${error.toString()}');
-      return error.message;
+      "conversations":
+          List<dynamic>.from(currentUser.conversations.map((x) => x.toJson()))
+    });
+
+    // update conversations field inside FriendUser data
+    UserConversation friendConversationData = UserConversation(
+        id: conversationId,
+        email: currentUser.email,
+        username: currentUser.username);
+    friend.conversations.add(friendConversationData);
+
+    await _usersCollectionReference.document(friend.id).updateData({
+      "conversations":
+          List<dynamic>.from(friend.conversations.map((x) => x.toJson()))
     });
   }
 

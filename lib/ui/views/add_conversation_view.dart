@@ -1,11 +1,11 @@
 import 'package:chatout/core/constants/app_constants.dart';
-import 'package:chatout/core/view_models/views/add_friend_view_model.dart';
+import 'package:chatout/core/view_models/views/add_conversation_view_model.dart';
 import 'package:chatout/ui/widgets/base_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-class AddFriendView extends StatelessWidget {
+class AddConversationView extends StatelessWidget {
   //////////////////////////////////////////////////
   final _formKey = new GlobalKey<FormState>();
   final TextEditingController _eController = TextEditingController();
@@ -13,7 +13,7 @@ class AddFriendView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseWidget(
-      model: AddFriendViewModel(
+      model: AddConversationViewModel(
           fireAuth: Provider.of(context),
           firestoreService: Provider.of(context)),
       builder: (context, model, child) => Scaffold(
@@ -85,7 +85,7 @@ class AddFriendView extends StatelessWidget {
         }
         bool dirtyInput = value == model.currentUser.email ? true : false;
         if (dirtyInput) {
-          return 'you can\'t add your self';
+          return 'You can\'t add your self';
         }
         return null; // case :: Valid user input
       },
@@ -111,11 +111,9 @@ class AddFriendView extends StatelessWidget {
                 String email = _eController.text.trim();
                 FocusScope.of(context).unfocus();
                 ///////////////////////////////////////////
-                var result = await model.addFriend(friendEmail: email);
-                print('%%%%%%%%%%%%%%% ${result.runtimeType} :: %%%%%%%%%%%');
-
-                if (result is Exception) {
-                  // if result is not String (error) show Alert.
+                var result = await model.addConversation(friendEmail: email);
+                if (result is! bool) {
+                  // Therefore result is exception
                   Alert(
                           context: context,
                           type: AlertType.error,
@@ -123,10 +121,16 @@ class AddFriendView extends StatelessWidget {
                           desc: '${result.toString()}')
                       .show();
                 } else {
-                  //operation is successful (signIn or signUp)
-                  //Navigator.pushReplacementNamed(context, RoutePaths.Home);
-                  //both signUp and signIn navigates to home as FireBase
-                  // SignUp automatically logs in the user.
+                  // Therefore operation is successful
+                  // then we wait for return from the Alert Window
+                  await Alert(
+                    context: context,
+                    type: AlertType.success,
+                    title: 'SUCCESS',
+                  ).show();
+
+                  // navigate back to home
+                  Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
                 }
               }
             },
