@@ -15,9 +15,9 @@ class HomeView extends StatelessWidget {
       builder: (context, model, child) => Scaffold(
         appBar: buildAppBar(context, model),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.of(context)
-                .pushReplacementNamed(RoutePaths.AddConversation);
+          onPressed: () async {
+            await Navigator.of(context).pushNamed(RoutePaths.AddConversation);
+            model.getMyConversations();
           },
           child: Icon(Icons.add),
         ),
@@ -36,6 +36,10 @@ class HomeView extends StatelessWidget {
 
   PreferredSizeWidget buildAppBar(BuildContext context, dynamic model) {
     return AppBar(
+      title: Text(
+        'Chat Rooms',
+        style: TextStyle(fontFamily: 'Pacifico', fontSize: 28.0),
+      ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.exit_to_app),
@@ -57,7 +61,16 @@ class HomeView extends StatelessWidget {
           return ListTile(
             title: Text(model.myConversations[index].username),
             subtitle: Text(model.myConversations[index].email),
-            onTap: () {},
+            onTap: () {
+              Map<String, String> args = {
+                "conversationId": model.myConversations[index].id,
+                "currentUserId": model.currentUser.id,
+                "friendUserName": model.myConversations[index].username
+              };
+
+              Navigator.of(context)
+                  .pushNamed(RoutePaths.ConversationView, arguments: args);
+            },
           );
         });
   }

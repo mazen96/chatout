@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:chatout/core/models/conversation.dart';
+import 'package:chatout/core/models/message.dart';
 import 'package:chatout/core/models/user_conversations.dart';
 import 'package:chatout/core/models/user.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class FirestoreService {
   final CollectionReference _usersCollectionReference =
@@ -10,6 +13,9 @@ class FirestoreService {
 
   final CollectionReference _conversationsCollectionReference =
       Firestore.instance.collection('conversations');
+
+  final StreamController<List<Message>> _messageStreamController =
+      StreamController<List<Message>>.broadcast();
 
   Future createUser(User user) async {
     // try-catch block is not present here as error handling
@@ -97,4 +103,64 @@ class FirestoreService {
 
     return result > 0 ? true : false;
   }
+
+  Future getConversationById(String conversationId) async {
+    try {
+      var conversationData = await _conversationsCollectionReference
+          .document(conversationId)
+          .get();
+      return Conversation.fromJson(conversationData.data);
+    } catch (error) {
+      print(error.toString());
+      return error.toString();
+    }
+  }
+//
+//  Future getConversationMessages(String conversationId) async {
+//    Conversation conversation;
+//    try {
+//      conversation = await getConversationById(conversationId);
+//    } catch (error) {
+//      print(error.toString());
+//      return error.toString();
+//    }
+//    return conversation.messages;
+//  }
+
+  Stream listenToMessagesRealTime(String conversationId) {
+    // Register the handler for when messages data changes
+    _conversationsCollectionReference
+        .document(conversationId)
+        .snapshots()
+        .listen((conversationSnapShot) {
+      if (conversationSnapShot.exists) {
+        Conversation conversation =
+            Conversation.fromJson(conversationSnapShot.data);
+
+        // Add messages onto the stream controller
+        _messageStreamController.add(conversation.messages);
+      }
+    });
+
+    return _messageStreamController.stream;
+  }
+
+  void sendMessageToCloud(String conversationId, Message msg) async {
+    Conversation tmpConversation = await getConversationById(conversationId);
+    tmpConversation.messages.add(msg);
+    _conversationsCollectionReference
+        .document(conversationId)
+        .setData(tmpConversation.toJson())
+        .catchError((error) {
+      print('****************************************');
+      print('****************************************');
+      print(error.toString());
+      print('****************************************');
+      print('****************************************');
+    });
+  }
+
+//      .updateData({
+//  "messages": FieldValue.arrayUnion([msg.toJson()])
+//  })
 }

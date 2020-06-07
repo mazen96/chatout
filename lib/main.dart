@@ -18,7 +18,7 @@ class MyApp extends StatelessWidget {
           title: 'Chatout',
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
-            primarySwatch: Colors.blue,
+            primarySwatch: Colors.pink,
           ),
           initialRoute: RoutePaths.StartUp,
           onGenerateRoute: Router.generateRoute,

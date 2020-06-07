@@ -100,7 +100,7 @@ class SignUpForm extends StatelessWidget {
         Expanded(
           child: RaisedButton(
             elevation: 8.0,
-            color: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColorLight,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5.0)),
             onPressed: () async {

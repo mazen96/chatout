@@ -130,7 +130,8 @@ class AddConversationView extends StatelessWidget {
                   ).show();
 
                   // navigate back to home
-                  Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
+                  //Navigator.of(context).pushReplacementNamed(RoutePaths.Home);
+                  Navigator.of(context).pop();
                 }
               }
             },

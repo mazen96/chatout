@@ -40,7 +40,7 @@ class _SignUpViewState extends State<SignUpView> {
         Expanded(
           child: Card(
             elevation: 5.0,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).primaryColorLight,
             child: Container(
               padding: EdgeInsets.symmetric(vertical: 30.0),
               child: Center(
