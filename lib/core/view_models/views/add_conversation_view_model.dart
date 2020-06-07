@@ -16,15 +16,17 @@ class AddConversationViewModel extends BaseViewModel {
 
   User get currentUser => _fireAuth.currentUser;
 
-  Future<bool> addConversation({@required String friendEmail}) async {
+  Future<dynamic> addConversation({@required String friendEmail}) async {
     ////////////////////////////////////////
     setBusy(true);
     bool isUserEmailFound =
         await _firestoreService.isUserEmailFound(email: friendEmail);
     if (isUserEmailFound == false) {
-      throw (Exception("User Not Found"));
+      setBusy(false);
+      return Exception("User Not Found");
     } else if (conversationAlreadyExists(friendEmail)) {
-      throw (Exception("User already found in your chats"));
+      setBusy(false);
+      return Exception("User already found in your chats");
     } else {
       // email found in users DB and user has no chats with the provided email
       await _firestoreService.addConversation(
@@ -40,7 +42,10 @@ class AddConversationViewModel extends BaseViewModel {
       int result = userConversationsList.indexWhere((friend) {
         return friend.email == friendEmail;
       });
-      return result == -1 ? false : true;
+      if (result == -1)
+        return false; // conversation not found
+      else
+        return true; // conversation already exists
     } else {
       return false;
     }

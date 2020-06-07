@@ -73,6 +73,7 @@ class AddConversationView extends StatelessWidget {
     return TextFormField(
       controller: _eController,
       validator: (value) {
+        value = value.trim();
         if (value.isEmpty) {
           return 'Please enter your friend\'s email.';
         }
@@ -118,7 +119,7 @@ class AddConversationView extends StatelessWidget {
                           context: context,
                           type: AlertType.error,
                           title: 'ERROR',
-                          desc: '${result.toString()}')
+                          desc: '${result.message}')
                       .show();
                 } else {
                   // Therefore operation is successful
