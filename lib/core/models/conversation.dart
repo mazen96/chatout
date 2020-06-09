@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final conversation = conversationFromJson(jsonString);
-
 import 'dart:convert';
 import 'package:chatout/core/models/message.dart';
 

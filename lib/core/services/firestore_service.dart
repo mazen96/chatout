@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:chatout/core/models/conversation.dart';
 import 'package:chatout/core/models/message.dart';
 import 'package:chatout/core/models/user_conversations.dart';
@@ -23,14 +22,14 @@ class FirestoreService {
     await _usersCollectionReference.document((user.id)).setData(user.toJson());
   }
 
-  Future getUserById(String id) async {
+  Future<User> getUserById(String id) async {
+    DocumentSnapshot userData;
     try {
-      var userData = await _usersCollectionReference.document(id).get();
-      return User.fromJson(userData.data);
+      userData = await _usersCollectionReference.document(id).get();
     } catch (error) {
       print(error.toString());
-      return error.toString();
     }
+    return User.fromJson(userData.data);
   }
 
   Future<User> getUserByEmail(String email) async {
@@ -49,9 +48,9 @@ class FirestoreService {
     User user;
     try {
       user = await getUserById(id);
-    } catch (error) {
-      print(error.toString());
-      return error.toString();
+    } catch (error, s) {
+      print(error);
+      print(s);
     }
     return user.conversations;
   }
@@ -115,17 +114,6 @@ class FirestoreService {
       return error.toString();
     }
   }
-//
-//  Future getConversationMessages(String conversationId) async {
-//    Conversation conversation;
-//    try {
-//      conversation = await getConversationById(conversationId);
-//    } catch (error) {
-//      print(error.toString());
-//      return error.toString();
-//    }
-//    return conversation.messages;
-//  }
 
   Stream listenToMessagesRealTime(String conversationId) {
     // Register the handler for when messages data changes
@@ -152,15 +140,7 @@ class FirestoreService {
         .document(conversationId)
         .setData(tmpConversation.toJson())
         .catchError((error) {
-      print('****************************************');
-      print('****************************************');
       print(error.toString());
-      print('****************************************');
-      print('****************************************');
     });
   }
-
-//      .updateData({
-//  "messages": FieldValue.arrayUnion([msg.toJson()])
-//  })
 }

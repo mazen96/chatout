@@ -50,21 +50,4 @@ class ConversationViewModel extends BaseViewModel {
         Message(senderId: senderID, receiverId: receiverID, text: msgText);
     _firestoreService.sendMessageToCloud(_conversationId, msg);
   }
-
-//  Future getMessages() async {
-//    //// note may be bug /////
-//    setBusy(true);
-//    /////////////////////////
-//    try {
-//      messages =
-//          await _firestoreService.getConversationMessages(_conversationId);
-//      notifyListeners(); // v.i.i.i.i.i.i.
-//      //// note may be bug /////
-//      setBusy(false);
-//      /////////////////////////
-//    } catch (error) {
-//      print(error.toString());
-//      return error.toString();
-//    }
-//  }
 }

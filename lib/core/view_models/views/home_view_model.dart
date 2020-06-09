@@ -18,19 +18,12 @@ class HomeViewModel extends BaseViewModel {
   List<UserConversation> myConversations;
 
   Future getMyConversations() async {
-    //// note may be bug /////
     setBusy(true);
-    /////////////////////////
     String myId = currentUser.id;
-    print('%%%%%%%%%%%% Inside getMyConversations function %%%%%%%%%%');
     try {
       myConversations = await _firestoreService.getUserConversations(myId);
       notifyListeners(); /////////////////// v.i.i
-      //// note may be bug /////
       setBusy(false);
-      /////////////////////////
-      print(
-          '%%%%%%%%%%%% myConversations len :: ${myConversations.length} %%%%%%%%%%');
     } catch (error) {
       print(error.toString());
       return error.toString();

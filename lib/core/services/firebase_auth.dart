@@ -7,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FireAuth implements BaseAuth {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final FirestoreService _firestoreService;
-  User _currentUser;
+  User _currentUser = User();
 
   FireAuth({FirestoreService firestoreService})
       : _firestoreService = firestoreService;
@@ -31,8 +31,11 @@ class FireAuth implements BaseAuth {
       throw Exception(errorMessage); // code returns here with exception.
     }
 
-    //TODO:: handle exception handling for the following function call
-    await _populateCurrentUser(user.uid);
+    try {
+      await _populateCurrentUser(user.uid);
+    } catch (e) {
+      print(e.toString());
+    }
   } // end of signIn function
   /////////////////////////////////////////////////////
 
@@ -59,7 +62,6 @@ class FireAuth implements BaseAuth {
     }
 
     if (errorMessage != null) {
-      //return Exception(errorMessage);
       throw Exception(errorMessage);
     }
 
@@ -68,12 +70,11 @@ class FireAuth implements BaseAuth {
 
   /////////////////////////////////////////////////////
   Future<bool> isUserLoggedIn() async {
-    //TODO:: error prone handle exceptions
     FirebaseUser currentUser = await _firebaseAuth.currentUser();
     // we use __populateCurrentUser function here as in startup view
     // neither signIn nor signUp functions are called if there is a previous
     // user session ,therefore we need to update _currentUser property here
-    // as isUserLoggedIn function us called inside the startUpViewModel
+    // as isUserLoggedIn function is called inside the startUpViewModel
     if (currentUser != null) {
       await _populateCurrentUser(currentUser.uid);
     }

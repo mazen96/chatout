@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print('%%%%%%%%%%%% REBUILT %%%%%%%%%%%%%%');
     return BaseWidget(
       model: HomeViewModel(
           auth: Provider.of(context), firestore: Provider.of(context)),
