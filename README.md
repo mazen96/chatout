@@ -1,16 +1,11 @@
-# chatout
+# Chat-out
 
-A new Flutter application.
+Chat-out is a real time messaging *flutter* application, which implements basic authentication flow and real time messaging using *Firebase Auth* and *Firestore*. 
 
-## Getting Started
+## Built With
 
-This project is a starting point for a Flutter application.
+* [Flutter](https://flutter.dev/) - Mobile UI framework.
+* [Provider](https://pub.dev/packages/provider) - State Management and Dependency Injection.
+* [Firebase](https://firebase.google.com/) - Backend for authentication and messaging.
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
